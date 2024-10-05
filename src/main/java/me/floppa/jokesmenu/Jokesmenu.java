@@ -4,7 +4,7 @@ import me.floppa.jokesmenu.Commands.JokesMenuCommand;
 import me.floppa.jokesmenu.Events.JokesEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
@@ -17,48 +17,32 @@ import java.net.URLConnection;
 import java.util.Objects;
 
 public final class Jokesmenu extends JavaPlugin {
-    String currentVersion = "0.7.0-beta";
+    String currentVersion = "0.7.1-beta";
 
     public String checkForNewVersion(Boolean getDownloadFile) throws IOException, ParseException {
         if(!getDownloadFile) {
             try {
-                // URL для получения JSON-данных
-                final String response = getString();
+                JSONArray array = getArrayWebSite(); // Для простоты
 
-                JSONObject jsonResponse = null;
-
-                // Парсинг JSON-ответа
-                try {
-                    jsonResponse = (JSONObject) JSONValue.parseWithException(response);
-                    if (jsonResponse == null) {
-                        System.out.println("Failed to parse JSON response.");
-                        return currentVersion; // Возвращаем текущую версию, если не удалось распарсить
-                    }
-                } catch (ParseException e) {
-                    getLogger().severe("Failed to parse: " + e.getMessage());
-                }
-
-                // Получение версии из объекта "info"
-                assert jsonResponse != null;
-                String version = (String) jsonResponse.get("version");
-                if (version == null || version.isEmpty()) {
+                if (array == null || array.isEmpty()) {
                     this.getLogger().warning("No version found, or Feed URL is bad.");
-                    return currentVersion;
+                    getLogger().info(array.toJSONString()); // Выводим для дебаггинга
+                    return currentVersion; // Возвращаем т.к у нас инвалидный array
                 } else {
-                    // Преобразуем строку версии в число
-                    return version;
+                    return ((String)((JSONObject)array.get(array.size() - 1)).get("version")); // Вычесть из array 1 и получить последнюю version
                 }
             } catch (Exception e) {
-                getLogger().severe("Failed" + e);
+                getLogger().severe("Failed " + e); // Вывод для дебаггинга
                 return currentVersion; // Вернуть текущую версию в случае ошибки
             }
         } else {
-            JSONObject jsonresponse = (JSONObject) JSONValue.parseWithException(getString());
-            return (String) jsonresponse.get("downloadfile");
+            // URL для получения JSON-данных
+            JSONArray array = getArrayWebSite(); // Вводим в переменную array функцию т.к у нас может отличаться size и мы не вычтем 1
+            return ((String)((JSONObject)array.get(array.size() - 1)).get("downloadfile")); // Просто выводим из последнего downloadfile
         }
     }
 
-    private static @NotNull String getString() throws IOException {
+    public static JSONArray getArrayWebSite() throws IOException {
         URL url = new URL("https://user12233.github.io/versionMenu/info.json");
         URLConnection conn = url.openConnection();
         conn.setReadTimeout(5000);
@@ -68,13 +52,10 @@ public final class Jokesmenu extends JavaPlugin {
 
         // Чтение ответа
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        StringBuilder responseBuilder = new StringBuilder();
         String line = reader.readLine();
-        responseBuilder.append(line);
+        JSONArray array = (JSONArray)JSONValue.parse(line);
         reader.close();
-
-        // Получаем полный ответ как строку
-        return responseBuilder.toString();
+        return array;
     }
 
     private String getNewVersion() {
