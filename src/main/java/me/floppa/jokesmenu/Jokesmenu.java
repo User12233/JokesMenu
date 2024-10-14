@@ -17,7 +17,7 @@ import java.net.URLConnection;
 import java.util.Objects;
 
 public final class Jokesmenu extends JavaPlugin {
-    String currentVersion = "0.7.1-beta";
+    String currentVersion = "0.7.3-beta";
 
     public String checkForNewVersion(Boolean getDownloadFile) throws IOException, ParseException {
         if(!getDownloadFile) {
@@ -26,7 +26,6 @@ public final class Jokesmenu extends JavaPlugin {
 
                 if (array == null || array.isEmpty()) {
                     this.getLogger().warning("No version found, or Feed URL is bad.");
-                    getLogger().info(array.toJSONString()); // Выводим для дебаггинга
                     return currentVersion; // Возвращаем т.к у нас инвалидный array
                 } else {
                     return ((String)((JSONObject)array.get(array.size() - 1)).get("version")); // Вычесть из array 1 и получить последнюю version
@@ -72,7 +71,6 @@ public final class Jokesmenu extends JavaPlugin {
         // Plugin startup logic
         Objects.requireNonNull(getCommand("jokesmenu")).setExecutor(new JokesMenuCommand());
         Bukkit.getPluginManager().registerEvents(new JokesEvents(), this);
-        getLogger().info("JokesMenu has been enabled");
         String getNewVersion = getNewVersion();
         if(Objects.equals(getNewVersion, currentVersion)) {
             getLogger().info("Current version " + currentVersion);
