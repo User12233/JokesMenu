@@ -301,7 +301,7 @@ public class JokesEvents implements Listener {
                             new BukkitRunnable() {
                                 public void run() {
                                     if(running.get()) {
-                                        Objects.requireNonNull(new RayTraceResult(player.getLocation().getDirection()).getHitBlock()).breakNaturally();
+                                        Objects.requireNonNull(Objects.requireNonNull(player.getWorld().rayTraceBlocks(player.getLocation(), player.getEyeLocation().getDirection(), 15)).getHitBlock()).breakNaturally();
                                     } else {
                                         cancel();
                                     }
