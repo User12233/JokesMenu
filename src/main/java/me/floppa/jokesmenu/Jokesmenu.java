@@ -17,7 +17,7 @@ import java.net.URLConnection;
 import java.util.Objects;
 
 public final class Jokesmenu extends JavaPlugin {
-    String currentVersion = "0.7.3-beta";
+    String currentVersion = "0.7.4-beta";
 
     public String checkForNewVersion(Boolean getDownloadFile) throws IOException, ParseException {
         if(!getDownloadFile) {
