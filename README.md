@@ -1,6 +1,6 @@
 # English
 ## Usage
-- `/jokesmenu [Nick]` - opens tab where you need to choose joke
+- Random chooses trolling, when you complete the achievement `Stone age`
 
 ## Installation
 1. Download the latest version of the plugin from [GitHub Releases](https://github.com/User12233/JokesMenu/releases).
@@ -11,7 +11,7 @@ If you encounter problems or have questions, please open an issue on GitHub
 
 # Russian
 ## Использование
-- `/jokesmenu [Nick]` - открывает окно где нужно выбрать троллинг
+- Рандом выбирает троллинг, когда вы получаете достижение `Каменный век`
 
 ## Установка
 1. Скачайте последнюю версию плагина из [отсюда](https://github.com/User12233/JokesMenu/releases).
